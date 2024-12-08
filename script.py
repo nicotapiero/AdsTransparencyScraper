@@ -13,13 +13,13 @@ LINKS =  [
 
 for link in LINKS:
 	f = open("youtube_links.txt", "a")
+	driver = webdriver.Chrome()
+	driver.get(link)
+
+	# arbitrary sleep, if ur internet is faster feel free to lower
+	time.sleep(4)
+	
 	try:
-		driver = webdriver.Chrome()
-		driver.get(link)
-
-		# arbitrary sleep, if ur internet is faster feel free to lower
-		time.sleep(4)
-
 		# the youtube link is like 3 iframes deep -_- .....
 		id = driver.execute_script("""return document.querySelectorAll('iframe')[0].id""")
 		iframe = driver.find_element(By.ID, id)
@@ -34,13 +34,11 @@ for link in LINKS:
 		yt_link = "https://www.youtube.com/watch?v=" + yt_link_embed[len("https://www.youtube.com/embed/"): yt_link_embed.index("?")]
 
 		data_snatched = "Link: %s yt_link: %s\n" % (link, yt_link)
-		print(data_snatched)
-		f.write(data_snatched)
-
-		driver.close()
 	except:
 		data_snatched = "ERROR: Link: %s has no YouTube vid\n" % (link)
-		print(data_snatched)
-		f.write(data_snatched)
+		
+	driver.close()
+	print(data_snatched)
+	f.write(data_snatched)
 	f.close()
 		
